@@ -1,0 +1,25 @@
+from database.db import get_movie_by_code
+import sqlite3
+
+def test_search():
+    code = "123" # try a known code or find one
+    conn = sqlite3.connect('database/bot_db.sqlite')
+    cursor = conn.cursor()
+    cursor.execute("SELECT code FROM movies LIMIT 1")
+    res = cursor.fetchone()
+    conn.close()
+    
+    if res:
+        code = res[0]
+        print(f"Testing with existing code: {code}")
+        movie = get_movie_by_code(code)
+        if movie:
+            print(f"Found movie: {movie[1]}")
+            print(f"Movie details: {movie}")
+        else:
+            print("Movie NOT found by code.")
+    else:
+        print("No movies in database.")
+
+if __name__ == "__main__":
+    test_search()
