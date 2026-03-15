@@ -26,7 +26,7 @@ async def stats_cmd(message: types.Message):
 @router.message(Command("add"), F.from_user.id.in_(ADMIN_IDS))
 async def cmd_add_movie_wizard(message: types.Message, state: FSMContext):
     await state.set_state(AddMovieStates.title)
-    await message.answer("🎬 **Yangi kino qo'shish**\n\n1. Kino nomini yuboring:", reply_markup=cancel_kb())
+    await message.answer("🎬 Yangi kino qo'shish\n\n1. Kino nomini yuboring:", reply_markup=cancel_kb())
 
 @router.callback_query(F.data == "cancel_wizard")
 async def cancel_wizard_callback(callback: types.CallbackQuery, state: FSMContext):
@@ -97,7 +97,7 @@ async def process_imdb(message: types.Message, state: FSMContext):
     success = add_movie(data['title'], data['desc'], data['photo'], data['link'], data['code'], rating)
     if success:
         await message.answer(
-            f"✅ **Kino muvaffaqiyatli qo'shildi!**\n\n"
+            f"✅ Kino muvaffaqiyatli qo'shildi!\n\n"
             f"🎥 Nomi: {data['title']}\n"
             f"🔢 Kodi: `{data['code']}`\n"
             f"⭐ IMDb: {rating}"
@@ -137,9 +137,9 @@ async def process_admin_reply(message: types.Message, state: FSMContext, bot: Bo
     
     try:
         if message.text:
-            await bot.send_message(target_user_id, f"✉️ **Admin javobi:**\n\n{message.text}", parse_mode="Markdown")
+            await bot.send_message(target_user_id, f"✉️ Admin javobi:\n\n{message.text}", parse_mode="Markdown")
         elif message.photo:
-            await bot.send_photo(target_user_id, message.photo[-1].file_id, caption=f"✉️ **Admin javobi:**\n\n{message.caption or ''}", parse_mode="Markdown")
+            await bot.send_photo(target_user_id, message.photo[-1].file_id, caption=f"✉️ Admin javobi:\n\n{message.caption or ''}", parse_mode="Markdown")
         
         await message.answer("✅ Javobingiz foydalanuvchiga yuborildi!")
         await state.clear()
@@ -152,7 +152,7 @@ async def process_admin_reply(message: types.Message, state: FSMContext, bot: Bo
 @router.message(Command("edit"), F.from_user.id.in_(ADMIN_IDS))
 async def cmd_edit_movie(message: types.Message, state: FSMContext):
     await state.set_state(EditMovieStates.waiting_for_code)
-    await message.answer("📝 **Kino tahrirlash**\n\nKino kodini yuboring:", reply_markup=cancel_kb())
+    await message.answer("📝 Kino tahrirlash\n\nKino kodini yuboring:", reply_markup=cancel_kb())
 
 @router.message(EditMovieStates.waiting_for_code, F.from_user.id.in_(ADMIN_IDS))
 async def process_edit_code(message: types.Message, state: FSMContext):
@@ -173,7 +173,7 @@ async def process_edit_code(message: types.Message, state: FSMContext):
     kb.row(types.InlineKeyboardButton(text="✅ Tugatish", callback_data="cancel_wizard"))
     
     await message.answer(
-        f"📋 **Kino ma'lumotlari:**\n\n"
+        f"📋 Kino ma'lumotlari:\n\n"
         f"🎬 Nomi: {movie[1]}\n"
         f"🔢 Kodi: {movie[5]}\n\n"
         f"O'zgartirmoqchi bo'lgan bo'limni tanlang:",
@@ -224,7 +224,7 @@ async def process_new_value(message: types.Message, state: FSMContext):
         new_value = message.text
         
     update_data = {field: new_value}
-    success = update_movie(code, **update_data)
+    success = update_movie(code, update_data)
     
     if success:
         kb = InlineKeyboardBuilder()
@@ -254,7 +254,7 @@ async def edit_again_callback(callback: types.CallbackQuery, state: FSMContext):
     kb.row(types.InlineKeyboardButton(text="✅ Tugatish", callback_data="cancel_wizard"))
     
     await callback.message.edit_text(
-        f"📋 **Kino ma'lumotlari:**\n\n"
+        f"📋 Kino ma'lumotlari:\n\n"
         f"🎬 Nomi: {movie[1]}\n"
         f"🔢 Kodi: {movie[5]}\n\n"
         f"Yana nimani o'zgartiramiz?",
